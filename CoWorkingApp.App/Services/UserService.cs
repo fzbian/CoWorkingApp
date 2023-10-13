@@ -38,7 +38,36 @@ namespace CoWorkingApp.App.Services
                             }
                             break;
                         case AdminUser.Edit:
-                            Console.WriteLine("Option: edit");
+                            // TODO: Refactor this shit
+                            var userEmail = HelperStrings.ReadInput("Type the email: ");
+                            var userFound = userData.FindUser(userEmail);
+
+                            while (userFound == null)
+                            {
+                                Console.WriteLine("User cant be found! Try again");
+                                userEmail = HelperStrings.ReadInput("Type the email: ");
+                                userFound = userData.FindUser(userEmail);
+                            }
+
+                            userFound = new User()
+                            {
+                                Name = HelperStrings.ReadInput("Type the name: "),
+                                LastName = HelperStrings.ReadInput("Type the lastname: "),
+                                Email = HelperStrings.ReadInput("Type the email: "),
+                                Password = HelperStrings.ReadPassword("Type the password: "),
+                                IsAdmin = HelperStrings.ReadBool("Is admin? (Y/n): ")
+                            };
+
+                            var res = userData.EditUser(userFound);
+
+                            if (!res)
+                            {
+                                Console.WriteLine("It cant be possible edit this user.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("User edited succsesful!");
+                            }
                             break;
                         case AdminUser.Delete:
                             Console.WriteLine("Option: delete");

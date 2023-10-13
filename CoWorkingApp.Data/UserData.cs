@@ -49,5 +49,44 @@ namespace CoWorkingApp.Data
             }
         }
 
+        public bool EditUser(User user)
+        {
+            try
+            {
+                user.Password = EncryptData.EncryptText(user.Password);
+                var userCollection = jsonManager.GetCollection();
+
+                var indexUser = userCollection.FindIndex(p => p.Email == user.Email);
+                if (indexUser < 0)
+                {
+                    Console.WriteLine("The user does not exist");
+                    return false;
+                }
+
+                if (indexUser >= userCollection.Count)
+                {
+                    Console.WriteLine("The index is out of bounds");
+                    return false;
+                }
+
+                userCollection[indexUser] = user;
+                jsonManager.SaveCollection(userCollection);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+
+        public User? FindUser(string email)
+        {
+            var userCollection = jsonManager.GetCollection();
+            var user = userCollection.FirstOrDefault(p => p.Email == email);
+            if (user == null) return null;
+            return user;
+        }
     }
 }
