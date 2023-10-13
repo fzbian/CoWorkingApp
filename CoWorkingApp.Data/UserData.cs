@@ -88,5 +88,20 @@ namespace CoWorkingApp.Data
             if (user == null) return null;
             return user;
         }
+
+        public bool DeleteUser(Guid userId)
+        {
+            try
+            {
+                var userCollection = jsonManager.GetCollection();
+                userCollection.Remove(userCollection.Find(p => p.UserId == userId));
+                jsonManager.SaveCollection(userCollection);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

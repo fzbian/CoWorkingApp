@@ -70,10 +70,28 @@ namespace CoWorkingApp.App.Services
                             }
                             break;
                         case AdminUser.Delete:
-                            Console.WriteLine("Option: delete");
+                            var userEmailDelete = HelperStrings.ReadInput("Type the email: ");
+                            var userFoundDelete = userData.FindUser(userEmailDelete);
+
+                            while (userFoundDelete == null)
+                            {
+                                Console.WriteLine("User cant be found! Try again");
+                                userEmailDelete = HelperStrings.ReadInput("Type the email: ");
+                                userFoundDelete = userData.FindUser(userEmailDelete);
+                            }
+
+                            var deleteOption = HelperStrings.ReadBool($"Are you sure you want to delete the user '{userFoundDelete.Name} {userFoundDelete.LastName}'? (Y/n): ");                          
+                            if (deleteOption)
+                            {
+                                userData.DeleteUser(userFoundDelete.UserId);
+                                Console.WriteLine("User removed");
+                            }
+                            else
+                            {
+                                Console.WriteLine("User cant be removed!");
+                            }
                             break;
                         case AdminUser.ChangePassword:
-                            // TODO: Refactor this shit
                             var userEmailChangePassword = HelperStrings.ReadInput("Type the email: ");
                             var userFoundChangePassword = userData.FindUser(userEmailChangePassword);
 
