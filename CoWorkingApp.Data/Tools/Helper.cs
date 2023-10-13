@@ -13,8 +13,14 @@ namespace CoWorkingApp.Data
         public static string ReadInput(string prompt)
         {
             Console.Write(prompt);
-            return Console.ReadLine();
+            var userInput = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                return string.Empty;
+            }
+            return userInput;
         }
+
 
         public static string ReadPassword(string password)
         {
