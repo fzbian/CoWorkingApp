@@ -61,5 +61,22 @@ namespace CoWorkingApp.Data
             }
         }
 
+        public bool CreateUser(User user)
+        {
+            user.Password = EncryptData.EncryptText(user.Password);
+
+            try
+            {
+                var userCollection = jsonManager.GetCollection();
+                userCollection.Add(user);
+                jsonManager.SaveCollection(userCollection);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }

@@ -9,7 +9,8 @@ namespace CoWorkingApp.Data
         {
             // Try this code, if doesnt works clean it and use the first line
             //string collectionPath = $@"{Directory.GetCurrentDirectory()}/{typeof(T)}.json";
-            string collectionPath = Helper<T>.GetDirectoryWithCollection();            List<T> myCollection = new List<T>();
+            string collectionPath = HelperDirectory<T>.GetDirectoryWithCollection();
+            List<T> myCollection = new List<T>();
 
             if(File.Exists(collectionPath))
             {
@@ -21,7 +22,7 @@ namespace CoWorkingApp.Data
             else
             {
                 var streamWriter = new StreamWriter(collectionPath);
-                var jsonCollection = JsonConvert.SerializeObject(myCollection);
+                var jsonCollection = JsonConvert.SerializeObject(myCollection, Formatting.Indented);
                 streamWriter.WriteLine(jsonCollection);
                 streamWriter.Close();
             }
@@ -33,11 +34,11 @@ namespace CoWorkingApp.Data
         {
             // Try this code, if doesnt works clean it and use the first line
             //string collectionPath = $@"{Directory.GetCurrentDirectory()}/{typeof(T)}.json";
-            string collectionPath = Helper<T>.GetDirectoryWithCollection();
+            string collectionPath = HelperDirectory<T>.GetDirectoryWithCollection();
             try
             {
                 var streamWriter = new StreamWriter(collectionPath);
-                var jsonCollection = JsonConvert.SerializeObject(collection);
+                var jsonCollection = JsonConvert.SerializeObject(collection, Formatting.Indented);
                 streamWriter.WriteLine(jsonCollection);
                 streamWriter.Close();
             }

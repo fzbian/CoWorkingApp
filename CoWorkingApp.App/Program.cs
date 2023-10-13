@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using CoWorkingApp.App.Enumerations;
+using CoWorkingApp.App.Services;
 using CoWorkingApp.Data;
 using CoWorkingApp.Models;
 
@@ -8,6 +9,7 @@ namespace CoWorkingApp.App
     class Program
     {
         static UserData UserDataService { get; set;} = new UserData();
+        static UserService UserLogicService { get; set; } = new UserService(UserDataService);
         static void Main()
         {
             var appManager = new AppManager
@@ -31,10 +33,8 @@ namespace CoWorkingApp.App
                 while (!loginResult)
                 {
                     Console.WriteLine("Login");
-                    Console.Write("Email: ");
-                    var emailLogin = Console.ReadLine();
-                    Console.Write("Password: ");
-                    var passLogin = GetPassword();
+                    var emailLogin = HelperStrings.ReadInput("Email: ");
+                    var passLogin = HelperStrings.ReadPassword("Password: ");
 
                     var (isLoggedIn, isAdmin) = UserDataService.Login(emailLogin, passLogin);
                     if(isLoggedIn)
@@ -106,21 +106,8 @@ namespace CoWorkingApp.App
 
                     AdminUser menuAdminUserSelected = Enum.Parse<AdminUser>(menuAdminUsersSelected);
 
-                    switch (menuAdminUserSelected)
-                    {
-                        case AdminUser.Add:
-                            Console.WriteLine("Option: create");
-                            break;
-                        case AdminUser.Edit:
-                            Console.WriteLine("Option: edit");
-                            break;
-                        case AdminUser.Delete:
-                            Console.WriteLine("Option: delete");
-                            break;
-                        case AdminUser.ChangePassword:
-                            Console.WriteLine("Option: change password");
-                            break;
-                    }
+                    UserLogicService.ExecAction(menuAdminUserSelected);
+
                 }
             }
             else if (Enum.Parse<UserRole>(rolSelected) == UserRole.User)
@@ -153,38 +140,6 @@ namespace CoWorkingApp.App
                         break;
                 }
             }
-        }
-    
-        static string GetPassword()
-        {
-            string passwordInput = "";
-            while (true)
-            {
-                var keyPress = Console.ReadKey(true);
-
-                if (keyPress.Key == ConsoleKey.Enter)
-                {
-                    Console.WriteLine();
-                    break;
-                }
-                else if (keyPress.Key == ConsoleKey.Backspace)
-                {
-                    // Borrar el último carácter de la contraseña.
-                    if (passwordInput.Length > 0)
-                    {
-                        Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
-                        Console.Write(" ");
-                        Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
-                        passwordInput = passwordInput.Remove(passwordInput.Length - 1);
-                    }
-                }
-                else
-                {
-                    Console.Write("*");
-                    passwordInput += keyPress.KeyChar;
-                }
-            }
-            return passwordInput;
         }
     }
 }
