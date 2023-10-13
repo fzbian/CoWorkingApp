@@ -34,7 +34,7 @@ namespace CoWorkingApp.App
                     Console.Write("Email: ");
                     var emailLogin = Console.ReadLine();
                     Console.Write("Password: ");
-                    var passLogin = Console.ReadLine();
+                    var passLogin = GetPassword();
 
                     var (isLoggedIn, isAdmin) = UserDataService.Login(emailLogin, passLogin);
                     if(isLoggedIn)
@@ -153,6 +153,38 @@ namespace CoWorkingApp.App
                         break;
                 }
             }
+        }
+    
+        static string GetPassword()
+        {
+            string passwordInput = "";
+            while (true)
+            {
+                var keyPress = Console.ReadKey(true);
+
+                if (keyPress.Key == ConsoleKey.Enter)
+                {
+                    Console.WriteLine();
+                    break;
+                }
+                else if (keyPress.Key == ConsoleKey.Backspace)
+                {
+                    // Borrar el último carácter de la contraseña.
+                    if (passwordInput.Length > 0)
+                    {
+                        Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                        Console.Write(" ");
+                        Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                        passwordInput = passwordInput.Remove(passwordInput.Length - 1);
+                    }
+                }
+                else
+                {
+                    Console.Write("*");
+                    passwordInput += keyPress.KeyChar;
+                }
+            }
+            return passwordInput;
         }
     }
 }
