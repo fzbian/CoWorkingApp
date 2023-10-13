@@ -12,35 +12,6 @@ namespace CoWorkingApp.Data
             jsonManager = new JsonManager<User>();
         }
 
-        public bool CreateAdmin()
-        {
-            var userCollection = jsonManager.GetCollection();
-
-            if(!userCollection.Any(p => p.Name == "ADMIN" && p.LastName == "ADMIN" && p.Email == "ADMIN"))
-            {
-                try
-                {
-                    var adminUser = new User()
-                    {
-                        Name = "ADMIN",
-                        LastName = "ADMIN",
-                        Email = "ADMIN",
-                        UserId = Guid.NewGuid(),
-                        Password = EncryptData.EncryptText("4DM1N@"),
-                        IsAdmin = true
-                    };
-                    userCollection.Add(adminUser);
-                    jsonManager.SaveCollection(userCollection);
-                }
-                catch
-                {
-                    return false;
-                }      
-                return true;
-            }
-            return true;
-        }
-
         public (bool, bool) Login(string Email, string Password)
         {
             var userCollection = jsonManager.GetCollection();
