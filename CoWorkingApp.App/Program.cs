@@ -1,10 +1,13 @@
 ﻿using System.Collections.Concurrent;
 using CoWorkingApp.App.Enumerations;
+using CoWorkingApp.Data;
+using CoWorkingApp.Models;
 
 namespace CoWorkingApp.App
 {
     class Program
     {
+        static UserData UserDataService { get; set;} = new UserData();
         static void Main()
         {
             var appManager = new AppManager
@@ -23,6 +26,36 @@ namespace CoWorkingApp.App
 
             if (Enum.Parse<UserRole>(rolSelected) == UserRole.Admin)
             {
+                bool loginResult = false;
+                
+                while (!loginResult)
+                {
+                    Console.WriteLine("Login");
+                    Console.Write("Email: ");
+                    var emailLogin = Console.ReadLine();
+                    Console.Write("Password: ");
+                    var passLogin = Console.ReadLine();
+
+                    var (isLoggedIn, isAdmin) = UserDataService.Login(emailLogin, passLogin);
+                    if(isLoggedIn)
+                    {
+                        if (isAdmin)
+                        {
+                            Console.WriteLine("Login succsesful.");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Your user is not admin.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Email or password incorrect, try again!");
+                    }
+                    
+                }
+
                 string? menuAdminSelected = "";
                 while (menuAdminSelected != "1" && menuAdminSelected != "2" || string.IsNullOrEmpty(menuAdminSelected))
                 {
