@@ -73,7 +73,30 @@ namespace CoWorkingApp.App.Services
                             Console.WriteLine("Option: delete");
                             break;
                         case AdminUser.ChangePassword:
-                            Console.WriteLine("Option: change password");
+                            // TODO: Refactor this shit
+                            var userEmailChangePassword = HelperStrings.ReadInput("Type the email: ");
+                            var userFoundChangePassword = userData.FindUser(userEmailChangePassword);
+
+                            while (userFoundChangePassword == null)
+                            {
+                                Console.WriteLine("User cant be found! Try again");
+                                userEmailChangePassword = HelperStrings.ReadInput("Type the email: ");
+                                userFoundChangePassword = userData.FindUser(userEmailChangePassword);
+                            }
+
+                            userFoundChangePassword.Password = HelperStrings.ReadPassword("Type the password: ");
+
+                            var resChangePassword = userData.EditUser(userFoundChangePassword);
+
+                            if (!resChangePassword)
+                            {
+                                Console.WriteLine("It can't be possible edit this user.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Password changed successfully!");
+                            }
+
                             break;
             }
         }
