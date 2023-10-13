@@ -1,4 +1,7 @@
-﻿namespace CoWorkingApp.App
+﻿using System.Collections.Concurrent;
+using CoWorkingApp.App.Enumerations;
+
+namespace CoWorkingApp.App
 {
     class Program
     {
@@ -18,7 +21,7 @@
                 rolSelected = Console.ReadLine();
             }
 
-            if (rolSelected == "1")
+            if (Enum.Parse<UserRole>(rolSelected) == UserRole.Admin)
             {
                 string? menuAdminSelected = "";
                 while (menuAdminSelected != "1" && menuAdminSelected != "2" || string.IsNullOrEmpty(menuAdminSelected))
@@ -28,7 +31,7 @@
                     menuAdminSelected = Console.ReadLine();
                 }   
 
-                if (menuAdminSelected == "1")
+                if (Enum.Parse<MenuAdmin>(menuAdminSelected) == MenuAdmin.AdminDesks)
                 {
                     string? menuDesksSelected = "";
                     while (menuDesksSelected != "1" && menuDesksSelected != "2" && menuDesksSelected != "3" && menuDesksSelected != "4" || string.IsNullOrEmpty(menuDesksSelected))
@@ -39,23 +42,25 @@
                         menuDesksSelected = Console.ReadLine();
                     }
 
-                    switch (menuDesksSelected)
+                    AdminDesks menuAdminDesksSelected = Enum.Parse<AdminDesks>(menuDesksSelected);
+
+                    switch (menuAdminDesksSelected)
                     {
-                        case "1":
+                        case AdminDesks.Add:
                             Console.WriteLine("Option: create");
                             break;
-                        case "2":
+                        case AdminDesks.Edit:
                             Console.WriteLine("Option: edit");
                             break;
-                        case "3":
+                        case AdminDesks.Delete:
                             Console.WriteLine("Option: delete");
                             break;
-                        case "4":
+                        case AdminDesks.Block:
                             Console.WriteLine("Option: block");
                             break;
                     }
                 }
-                else if (menuAdminSelected == "2")
+                else if (Enum.Parse<MenuAdmin>(menuAdminSelected) == MenuAdmin.AdminUsers)
                 {
                     string? menuAdminUsersSelected = "";
                     while (menuAdminUsersSelected != "1" && menuAdminUsersSelected != "2" && menuAdminUsersSelected != "3" && menuAdminUsersSelected != "4" || string.IsNullOrEmpty(menuAdminUsersSelected))
@@ -66,24 +71,26 @@
                         menuAdminUsersSelected = Console.ReadLine();
                     }
 
-                    switch (menuAdminUsersSelected)
+                    AdminUser menuAdminUserSelected = Enum.Parse<AdminUser>(menuAdminUsersSelected);
+
+                    switch (menuAdminUserSelected)
                     {
-                        case "1":
+                        case AdminUser.Add:
                             Console.WriteLine("Option: create");
                             break;
-                        case "2":
+                        case AdminUser.Edit:
                             Console.WriteLine("Option: edit");
                             break;
-                        case "3":
+                        case AdminUser.Delete:
                             Console.WriteLine("Option: delete");
                             break;
-                        case "4":
+                        case AdminUser.ChangePassword:
                             Console.WriteLine("Option: change password");
                             break;
                     }
                 }
             }
-            else if (rolSelected == "2")
+            else if (Enum.Parse<UserRole>(rolSelected) == UserRole.User)
             {
                 string? menuUserSelected = "";
 
@@ -94,19 +101,21 @@
                     Console.Write("Select: ");
                     menuUserSelected = Console.ReadLine();
                 }
+ 
+                MenuUser menuUsersSelected = Enum.Parse<MenuUser>(menuUserSelected);
                 
-                switch (menuUserSelected)
+                switch (menuUsersSelected)
                 {
-                    case "1":
+                    case MenuUser.ReserveDesk:
                         Console.WriteLine("Option: reserve desk");
                         break;
-                    case "2":
+                    case MenuUser.CancelReserve:
                         Console.WriteLine("Option: cancel reserve");
                         break;
-                    case "3":
+                    case MenuUser.HistoryReserve:
                         Console.WriteLine("Option: history reserves");
                         break;
-                    case "4":
+                    case MenuUser.ChangePassword:
                         Console.WriteLine("Option: change password");
                         break;
                 }
