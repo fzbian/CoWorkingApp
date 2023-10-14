@@ -28,33 +28,7 @@ namespace CoWorkingApp.App
 
             if (Enum.Parse<UserRole>(rolSelected) == UserRole.Admin)
             {
-                bool loginResult = false;
-                
-                while (!loginResult)
-                {
-                    Console.WriteLine("Login");
-                    var emailLogin = HelperStrings.ReadInput("Email: ");
-                    var passLogin = HelperStrings.ReadPassword("Password: ");
-
-                    var (isLoggedIn, isAdmin) = UserDataService.Login(emailLogin, passLogin);
-                    if(isLoggedIn)
-                    {
-                        if (isAdmin)
-                        {
-                            Console.WriteLine("Login succsesful.");
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Your user is not admin.");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Email or password incorrect, try again!");
-                    }
-                    
-                }
+                UserLogicService.LoginUser(true);
 
                 string? menuAdminSelected = "";
                 while (menuAdminSelected != "1" && menuAdminSelected != "2" || string.IsNullOrEmpty(menuAdminSelected))
@@ -92,6 +66,8 @@ namespace CoWorkingApp.App
             }
             else if (Enum.Parse<UserRole>(rolSelected) == UserRole.User)
             {
+                UserLogicService.LoginUser(false);
+
                 string? menuUserSelected = "";
 
                 while (menuUserSelected != "1" && menuUserSelected != "2" && menuUserSelected != "3" && menuUserSelected != "4" || string.IsNullOrEmpty(menuUserSelected))

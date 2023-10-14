@@ -118,5 +118,70 @@ namespace CoWorkingApp.App.Services
                             break;
             }
         }
+
+        public void LoginUser(bool isUserAdmin)
+        {
+            switch (isUserAdmin)
+            {
+                case true:
+                    bool loginResultIsAdminTrue = false;
+                
+                    while (!loginResultIsAdminTrue)
+                    {
+                        Console.WriteLine("Login");
+                        var emailLogin = HelperStrings.ReadInput("Email: ");
+                        var passLogin = HelperStrings.ReadPassword("Password: ");
+
+                        var (isLoggedIn, isAdmin) = userData.Login(emailLogin, passLogin);
+                        if(isLoggedIn)
+                        {
+                            if (isAdmin)
+                            {
+                                Console.WriteLine("Login succsesful.");
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Your user is not admin.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Email or password incorrect, try again!");
+                        }
+                        
+                    }
+                    break;
+                case false:
+                    bool loginResultIsAdminFalse = false;
+                
+                    while (!loginResultIsAdminFalse)
+                    {
+                        Console.WriteLine("Login");
+                        var emailLogin = HelperStrings.ReadInput("Email: ");
+                        var passLogin = HelperStrings.ReadPassword("Password: ");
+
+                        var (isLoggedIn, isAdmin) = userData.Login(emailLogin, passLogin);
+                        if(isLoggedIn)
+                        {
+                            if (isAdmin)
+                            {
+                                Console.WriteLine("Your user is admin.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Login succesful!");
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Email or password incorrect, try again!");
+                        }
+                        
+                    }
+                    break;
+            }
+        }
     }
 }
