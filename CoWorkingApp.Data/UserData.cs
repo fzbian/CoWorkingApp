@@ -94,9 +94,18 @@ namespace CoWorkingApp.Data
             try
             {
                 var userCollection = jsonManager.GetCollection();
-                userCollection.Remove(userCollection.Find(p => p.UserId == userId));
-                jsonManager.SaveCollection(userCollection);
-                return true;
+                var userToRemove = userCollection.Find(p => p.UserId == userId);
+
+                if (userToRemove != null)
+                {
+                    userCollection.Remove(userToRemove);
+                    jsonManager.SaveCollection(userCollection);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch
             {
