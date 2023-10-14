@@ -1,3 +1,5 @@
+using CoWorkingApp.Models.Enumerations;
+
 namespace CoWorkingApp.Data
 {
     public class HelperDirectory<T>
@@ -64,6 +66,16 @@ namespace CoWorkingApp.Data
             if (res == "Y" || res == "y") return true;
             if (res == "N" || res == "n") return false;
             return false;
+        }
+
+        public static DeskStatus ReadDeskStatus(string prompt)
+        {
+            Console.Write(prompt);
+            var res = Console.ReadLine();
+            if (res == "1") return DeskStatus.Active;
+            else if (res == "2") return DeskStatus.Inactive;
+            else if (res == "3") return DeskStatus.Blocked;
+            throw new Exception("Invalid desk status");
         }
     }
 }

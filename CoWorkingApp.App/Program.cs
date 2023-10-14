@@ -9,7 +9,9 @@ namespace CoWorkingApp.App
     class Program
     {
         static UserData UserDataService { get; set;} = new UserData();
+        static DeskData DeskDataService { get; set; } = new DeskData();
         static UserService UserLogicService { get; set; } = new UserService(UserDataService);
+        static DeskService DeskLogicService { get; set; } = new DeskService(DeskDataService);
         static void Main()
         {
             var appManager = new AppManager
@@ -71,21 +73,7 @@ namespace CoWorkingApp.App
 
                     AdminDesks menuAdminDesksSelected = Enum.Parse<AdminDesks>(menuDesksSelected);
 
-                    switch (menuAdminDesksSelected)
-                    {
-                        case AdminDesks.Add:
-                            Console.WriteLine("Option: create");
-                            break;
-                        case AdminDesks.Edit:
-                            Console.WriteLine("Option: edit");
-                            break;
-                        case AdminDesks.Delete:
-                            Console.WriteLine("Option: delete");
-                            break;
-                        case AdminDesks.Block:
-                            Console.WriteLine("Option: block");
-                            break;
-                    }
+                    DeskLogicService.ExecAction(menuAdminDesksSelected);
                 }
                 else if (Enum.Parse<MenuAdmin>(menuAdminSelected) == MenuAdmin.AdminUsers)
                 {

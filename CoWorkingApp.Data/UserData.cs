@@ -73,9 +73,8 @@ namespace CoWorkingApp.Data
                 jsonManager.SaveCollection(userCollection);
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex.Message);
                 return false;
             }
         }
