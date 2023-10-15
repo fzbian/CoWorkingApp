@@ -1,4 +1,5 @@
 using CoWorkingApp.Models;
+using CoWorkingApp.Models.Enumerations;
 
 namespace CoWorkingApp.Data
 {
@@ -86,7 +87,7 @@ namespace CoWorkingApp.Data
 
         public IEnumerable<Desk> GetDesks()
         {
-            return jsonManager.GetCollection();
+            return jsonManager.GetCollection().Where(p => p.DeskStatus == DeskStatus.Active);
         }
     }
 }

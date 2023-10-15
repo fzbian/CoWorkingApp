@@ -167,10 +167,42 @@ namespace CoWorkingApp.App.Services
                     }
                     break;
                 case MenuUser.CancelReserve:
-                    Console.WriteLine("Option: cancel reserve");
+                    Console.WriteLine("Your reservations: ");
+                    var userReservations = reservationData.GetReservationsByUser(ActiveUser.UserId).ToList();
+                    
+                    int indexReservation = 1;
+                    var deskUserList = deskData.GetDesks();
+
+                    foreach(var item in userReservations)
+                    {
+                        Console.WriteLine($"{indexReservation}: {deskUserList.FirstOrDefault(p => p.DeskId == item.DeskId)} - {item.ReservationDate.ToString("dd-MM-yyy")}");
+                        indexReservation++;
+                    }
+
+                    var indexReservationSelected = int.Parse(HelperStrings.ReadInput("Type the number of reservation: "));
+
+                    while(indexReservationSelected >= 1 && indexReservationSelected <= indexReservation)
+                    {
+                        indexReservationSelected = int.Parse(HelperStrings.ReadInput("Type the number of reservation: "));
+                    }
+
+                    var reservatioToDelete = userReservations[indexReservationSelected];
+
+                    if(reservationData.CancelReservation(reservatioToDelete.ReservationId))
+                    {
+                        Console.WriteLine("The reservation was cancelled.");
+                    }         
+                    else
+                    {
+                        Console.WriteLine("Reservation cant be deleted.");
+                    }         
                     break;
                 case MenuUser.HistoryReserve:
-                    Console.WriteLine("Option: history reserves");
+                    var userReservationsHistory = reservationData.GetReservationsByUser(ActiveUser.UserId).ToList();
+                    foreach(var item in userReservationsHistory)
+                    {
+                        Console.WriteLine($"{userReservationsHistory.FirstOrDefault(p => p.DeskId == item.DeskId)} - {item.ReservationDate.ToString("dd-MM-yyy")}");
+                    }
                     break;
                 case MenuUser.ChangePassword:
                     Console.WriteLine("Option: change password");

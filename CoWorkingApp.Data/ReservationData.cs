@@ -24,5 +24,35 @@ namespace CoWorkingApp.Data
                 return false;
             }
         }
+
+        public bool CancelReservation(Guid reservationId)
+        {
+            try
+            {
+                var reservationCollection = jsonManager.GetCollection();
+                var reservationToRemove = reservationCollection.Find(p => p.ReservationId == reservationId);
+
+                if (reservationToRemove != null)
+                {
+                    reservationCollection.Remove(reservationToRemove);
+                    jsonManager.SaveCollection(reservationCollection);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public IEnumerable<Reservation> GetReservationsByUser(Guid userId)
+        {
+            var reservationCollection = jsonManager.GetCollection();
+            return reservationCollection.Where(p => p.UserId == userId && p.ReservationDate > DateTime.Now);
+        }
     }
 }
