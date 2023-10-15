@@ -2,10 +2,10 @@ using System;
 
 namespace CoWorkingApp.Models
 {
-    public class Reservetion
+    public class Reservation
     {
-        public Guid ReservetionId { get; set; }
-        public DateTime ReservetionDate { get; set; }
+        public Guid ReservationId { get; set; } = Guid.NewGuid();
+        public DateTime ReservationDate { get; set; }
         public Guid DeskId { get; set; }
         public Guid UserId { get; set; }
     }

@@ -8,9 +8,10 @@ namespace CoWorkingApp.App
 {
     class Program
     {
+        static User? ActiveUser { get; set; }
         static UserData UserDataService { get; set;} = new UserData();
         static DeskData DeskDataService { get; set; } = new DeskData();
-        static UserService UserLogicService { get; set; } = new UserService(UserDataService);
+        static UserService UserLogicService { get; set; } = new UserService(UserDataService, DeskDataService);
         static DeskService DeskLogicService { get; set; } = new DeskService(DeskDataService);
         static void Main()
         {
@@ -28,7 +29,7 @@ namespace CoWorkingApp.App
 
             if (Enum.Parse<UserRole>(rolSelected) == UserRole.Admin)
             {
-                UserLogicService.LoginUser(true);
+                ActiveUser = UserLogicService.LoginUser(true);
 
                 string? menuAdminSelected = "";
                 while (menuAdminSelected != "1" && menuAdminSelected != "2" || string.IsNullOrEmpty(menuAdminSelected))
@@ -60,13 +61,13 @@ namespace CoWorkingApp.App
 
                     AdminUser menuAdminUserSelected = Enum.Parse<AdminUser>(menuAdminUsersSelected);
 
-                    UserLogicService.ExecAction(menuAdminUserSelected);
+                    UserLogicService.ExecActionAdmin(menuAdminUserSelected);
 
                 }
             }
             else if (Enum.Parse<UserRole>(rolSelected) == UserRole.User)
             {
-                UserLogicService.LoginUser(false);
+                ActiveUser = UserLogicService.LoginUser(false);
 
                 string? menuUserSelected = "";
 
@@ -78,20 +79,13 @@ namespace CoWorkingApp.App
  
                 MenuUser menuUsersSelected = Enum.Parse<MenuUser>(menuUserSelected);
                 
-                switch (menuUsersSelected)
+                if (ActiveUser != null)
                 {
-                    case MenuUser.ReserveDesk:
-                        Console.WriteLine("Option: reserve desk");
-                        break;
-                    case MenuUser.CancelReserve:
-                        Console.WriteLine("Option: cancel reserve");
-                        break;
-                    case MenuUser.HistoryReserve:
-                        Console.WriteLine("Option: history reserves");
-                        break;
-                    case MenuUser.ChangePassword:
-                        Console.WriteLine("Option: change password");
-                        break;
+                    UserLogicService.ExecActionUser(ActiveUser, menuUsersSelected);
+                }
+                else
+                {
+                    throw new Exception("ActiveUser is null");
                 }
             }
         }

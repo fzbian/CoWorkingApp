@@ -83,5 +83,10 @@ namespace CoWorkingApp.Data
                 return false;
             }
         }
+
+        public IEnumerable<Desk> GetDesks()
+        {
+            return jsonManager.GetCollection();
+        }
     }
 }

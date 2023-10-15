@@ -7,12 +7,16 @@ namespace CoWorkingApp.App.Services
     public class UserService
     {
         private UserData userData { get; set; }
-        public UserService(UserData userData)
+        private DeskData deskData { get; set; }
+        private ReservationData reservationData { get; set; }
+        public UserService(UserData userData, DeskData deskData)
         {
             this.userData = userData;
+            this.deskData = deskData;
+            this.reservationData = new ReservationData();
         }
 
-        public void ExecAction(AdminUser menuAdminUserSelected)
+        public void ExecActionAdmin(AdminUser menuAdminUserSelected)
         {
             switch (menuAdminUserSelected)
                     {
@@ -119,69 +123,89 @@ namespace CoWorkingApp.App.Services
             }
         }
 
-        public void LoginUser(bool isUserAdmin)
+        public void ExecActionUser(User ActiveUser, MenuUser menuUserSelected)
         {
-            switch (isUserAdmin)
+            switch (menuUserSelected)
             {
-                case true:
-                    bool loginResultIsAdminTrue = false;
-                
-                    while (!loginResultIsAdminTrue)
+                case MenuUser.ReserveDesk:
+                    var deskList = deskData.GetDesks();
+                    foreach(var item in deskList)
                     {
-                        Console.WriteLine("Login");
-                        var emailLogin = HelperStrings.ReadInput("Email: ");
-                        var passLogin = HelperStrings.ReadPassword("Password: ");
+                        Console.WriteLine($"{item.Number} - {item.DeskStatus}");
+                    }
 
-                        var (isLoggedIn, isAdmin) = userData.Login(emailLogin, passLogin);
-                        if(isLoggedIn)
-                        {
-                            if (isAdmin)
-                            {
-                                Console.WriteLine("Login succsesful.");
-                                break;
-                            }
-                            else
-                            {
-                                Console.WriteLine("Your user is not admin.");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Email or password incorrect, try again!");
-                        }
-                        
+                    var newReservation = new Reservation();
+
+                    var deskNumber = HelperStrings.ReadInput("Type the number desk: ");
+                    var deskFound = deskData.FindDesk(deskNumber);
+
+                    while(deskFound == null)
+                    {
+                        deskNumber = HelperStrings.ReadInput("Type the number desk: ");
+                        deskFound = deskData.FindDesk(deskNumber);
+                    }
+
+                    newReservation.DeskId = deskFound.DeskId;
+
+                    var dateSelected = new DateTime();
+
+                    while(dateSelected.Year == 0001)
+                    {
+                        DateTime.TryParseExact(HelperStrings.ReadInput("Type the date of the reservation (dd-mm-yyyy): "), "dd-MM-yyyy", null, System.Globalization.DateTimeStyles.None, out dateSelected);
+                    }
+
+                    newReservation.ReservationDate = dateSelected;
+                    newReservation.UserId = ActiveUser.UserId;
+                    
+                    if(reservationData.CreateReservation(newReservation))
+                    {
+                        Console.WriteLine("Reservation created succsesfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The reservation cant be created.");
                     }
                     break;
-                case false:
-                    bool loginResultIsAdminFalse = false;
-                
-                    while (!loginResultIsAdminFalse)
-                    {
-                        Console.WriteLine("Login");
-                        var emailLogin = HelperStrings.ReadInput("Email: ");
-                        var passLogin = HelperStrings.ReadPassword("Password: ");
-
-                        var (isLoggedIn, isAdmin) = userData.Login(emailLogin, passLogin);
-                        if(isLoggedIn)
-                        {
-                            if (isAdmin)
-                            {
-                                Console.WriteLine("Your user is admin.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Login succesful!");
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Email or password incorrect, try again!");
-                        }
-                        
-                    }
+                case MenuUser.CancelReserve:
+                    Console.WriteLine("Option: cancel reserve");
+                    break;
+                case MenuUser.HistoryReserve:
+                    Console.WriteLine("Option: history reserves");
+                    break;
+                case MenuUser.ChangePassword:
+                    Console.WriteLine("Option: change password");
                     break;
             }
+
+        }
+
+        public User? LoginUser(bool isUserAdmin)
+        {
+            Console.WriteLine("Login");
+            var emailLogin = HelperStrings.ReadInput("Email: ");
+            var passLogin = HelperStrings.ReadPassword("Password: ");
+
+            var (user, isAdmin) = userData.Login(emailLogin, passLogin);
+        
+            while(user == null)
+            {
+                Console.WriteLine("Email or password incorrect, try again!");
+                Console.WriteLine("Login");
+                emailLogin = HelperStrings.ReadInput("Email: ");
+                passLogin = HelperStrings.ReadPassword("Password: ");
+                (user, isAdmin) = userData.Login(emailLogin, passLogin);
+            }
+
+            while (isUserAdmin && !isAdmin || !isUserAdmin && isAdmin)
+            {
+                Console.WriteLine("User is not in the correct panel, try again!");
+                Console.WriteLine("Login");
+                emailLogin = HelperStrings.ReadInput("Email: ");
+                passLogin = HelperStrings.ReadPassword("Password: ");
+                (user, isAdmin) = userData.Login(emailLogin, passLogin);
+            }
+            
+            return user;
         }
     }
 }

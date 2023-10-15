@@ -12,7 +12,7 @@ namespace CoWorkingApp.Data
             jsonManager = new JsonManager<User>();
         }
 
-        public (bool, bool) Login(string Email, string Password)
+        public (User?, bool) Login(string Email, string Password)
         {
             var userCollection = jsonManager.GetCollection();
 
@@ -20,15 +20,15 @@ namespace CoWorkingApp.Data
             var userFound = userCollection.FirstOrDefault(p => p.Email == Email && p.Password == passwordEncript);
             
             // User not found
-            if (userFound == null) return (false, false);
+            if (userFound == null) return (null, false);
             
             if (userFound.IsAdmin)
             {
-                return (true, true);
+                return (userFound, true);
             }
             else 
             {
-                return (true, false);
+                return (userFound, false);
             }
         }
 
